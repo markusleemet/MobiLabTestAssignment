@@ -19,7 +19,9 @@ class ListActivity : AppCompatActivity() {
         editTextAddItem.setOnEditorActionListener(object: TextView.OnEditorActionListener{
             override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    Log.i("ShoppingList", "return action took place")
+                    val item = outlinedTextFieldInsertItem.editText?.text.toString()
+                    Log.i("ShoppingList", "return action took place(item: $item)")
+                    return true
                 }
                 return false
             }
