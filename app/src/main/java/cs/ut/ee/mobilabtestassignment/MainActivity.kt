@@ -11,6 +11,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
+    /**
+     * This function creates new items list and stores it into view model.
+     */
     fun addNewItemsList(v: View){
 
     }
