@@ -9,6 +9,9 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.core.widget.doBeforeTextChanged
 import androidx.core.widget.doOnTextChanged
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_list.*
 
 class ListActivity : AppCompatActivity() {
@@ -16,6 +19,7 @@ class ListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list)
+        //listener listens submit button and then adds item to list
         editTextAddItem.setOnEditorActionListener(object: TextView.OnEditorActionListener{
             override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -27,5 +31,9 @@ class ListActivity : AppCompatActivity() {
             }
         })
 
+        recyler_view_items_list.apply {
+            layoutManager = LinearLayoutManager(this@ListActivity)
+            adapter = ItemsAdapter(arrayListOf<ItemEntity>(ItemEntity("piim", true), ItemEntity("viin", false)))
+        }
     }
 }

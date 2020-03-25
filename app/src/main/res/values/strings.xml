@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">MobiLabTestAssignment</string>
     <string name="Sisesta_toode">Sisesta toode</string>
+    <string name="completed">completed</string>
 </resources>
