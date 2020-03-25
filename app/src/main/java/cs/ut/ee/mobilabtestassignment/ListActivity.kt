@@ -9,6 +9,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.core.widget.doBeforeTextChanged
 import androidx.core.widget.doOnTextChanged
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +35,7 @@ class ListActivity : AppCompatActivity() {
         recyler_view_items_list.apply {
             layoutManager = LinearLayoutManager(this@ListActivity)
             adapter = ItemsAdapter(arrayListOf<ItemEntity>(ItemEntity("piim", true), ItemEntity("viin", false)))
+            addItemDecoration(DividerItemDecoration(this@ListActivity, LinearLayoutManager.VERTICAL))
         }
     }
 }
