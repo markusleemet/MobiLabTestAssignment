@@ -1,5 +1,6 @@
 package cs.ut.ee.mobilabtestassignment
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 
 class ShoppingListViewModel: ViewModel(){
@@ -7,7 +8,7 @@ class ShoppingListViewModel: ViewModel(){
 
 
     fun addItemToShoppingList(item: ItemEntity, listIndex: Int){
-        shoppingLists[listIndex].add(item)
+        shoppingLists[listIndex].add(0, item)
     }
 
     fun addNewShoppingList(){

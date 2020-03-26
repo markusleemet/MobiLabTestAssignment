@@ -23,6 +23,7 @@
             android:id="@+id/editTextAddItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textShortMessage"
             android:selectAllOnFocus="true"
             android:singleLine="true" />
 
