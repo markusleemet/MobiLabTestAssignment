@@ -14,4 +14,9 @@ class ShoppingListViewModel: ViewModel(){
     fun addNewShoppingList(){
         shoppingLists.add(ArrayList<ItemEntity>())
     }
+
+    fun changeItemStatus(shoppingListIndex: Int, itemIndex: Int){
+        val itemCurrentStatus = shoppingLists[shoppingListIndex][itemIndex].completed
+        shoppingLists[shoppingListIndex][itemIndex].completed = itemCurrentStatus.not()
+    }
 }

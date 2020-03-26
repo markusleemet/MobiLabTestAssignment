@@ -2,12 +2,10 @@ package cs.ut.ee.mobilabtestassignment
 
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -18,7 +16,7 @@ import kotlinx.android.synthetic.main.fragment_list.view.*
 
 private const val LIST_INDEX = ""
 
-class ListFragment : Fragment() {
+class ListFragment :OnItemClickListener, Fragment() {
     var listIndex: Int = -1
     var model: ShoppingListViewModel? = null
     var recyclerViewAdapter: ItemsAdapter? = null
@@ -50,14 +48,14 @@ class ListFragment : Fragment() {
                     model?.addItemToShoppingList(item, listIndex)
                     recyclerViewAdapter?.notifyDataSetChanged()
                     Log.i("ShoppingList", "return action took place(item: $item)")
-                    Log.i("shoppingList", "list new content: ${model!!.shoppingLists[listIndex]}")
+                    Log.i("ShoppingList", "list new content: ${model!!.shoppingLists[listIndex]}")
                 }
                 return false
             }
         })
 
         //set up recyclerView to show items in sopping list
-        recyclerViewAdapter = ItemsAdapter(model!!.shoppingLists[listIndex])
+        recyclerViewAdapter = ItemsAdapter(model!!.shoppingLists[listIndex], this)
         view.recyler_view_items_list.apply {
             layoutManager = LinearLayoutManager(activity)
             adapter = recyclerViewAdapter
@@ -79,5 +77,12 @@ class ListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         activity?.floating_action_button?.show()
+    }
+
+    override fun onItemClick(position: Int) {
+        Log.i("ShoppingList", "Clicked view position: $position")
+        Log.i("ShoppingList", "Clicked item: ${model!!.shoppingLists[listIndex][position]}")
+        model?.changeItemStatus(listIndex, position)
+        recyclerViewAdapter?.notifyDataSetChanged()
     }
 }
