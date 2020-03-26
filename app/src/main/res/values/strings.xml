@@ -2,4 +2,7 @@
     <string name="app_name">MobiLabTestAssignment</string>
     <string name="Sisesta_toode">Sisesta toode</string>
     <string name="completed">completed</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
