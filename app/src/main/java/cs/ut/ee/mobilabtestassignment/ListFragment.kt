@@ -2,10 +2,12 @@ package cs.ut.ee.mobilabtestassignment
 
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.KeyEvent
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -16,10 +18,11 @@ import kotlinx.android.synthetic.main.fragment_list.view.*
 
 private const val LIST_INDEX = ""
 
-class ListFragment :OnItemClickListener, Fragment() {
-    var listIndex: Int = -1
-    var model: ShoppingListViewModel? = null
-    var recyclerViewAdapter: ItemsAdapter? = null
+class ListFragment :OnItemClickListener, OnItemLongClickListener, Fragment() {
+    private var listIndex: Int = -1
+    private var model: ShoppingListViewModel? = null
+    private var recyclerViewAdapter: ItemsAdapter? = null
+    private var callback: OnFragmentClosedListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +58,7 @@ class ListFragment :OnItemClickListener, Fragment() {
         })
 
         //set up recyclerView to show items in sopping list
-        recyclerViewAdapter = ItemsAdapter(model!!.shoppingLists[listIndex], this)
+        recyclerViewAdapter = ItemsAdapter(model!!.shoppingLists[listIndex], this, this)
         view.recyler_view_items_list.apply {
             layoutManager = LinearLayoutManager(activity)
             adapter = recyclerViewAdapter
@@ -77,6 +80,7 @@ class ListFragment :OnItemClickListener, Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         activity?.floating_action_button?.show()
+        callback?.onFragmentClosed()
     }
 
     override fun onItemClick(position: Int) {
@@ -84,5 +88,17 @@ class ListFragment :OnItemClickListener, Fragment() {
         Log.i("ShoppingList", "Clicked item: ${model!!.shoppingLists[listIndex][position]}")
         model?.changeItemStatus(listIndex, position)
         recyclerViewAdapter?.notifyDataSetChanged()
+    }
+
+    override fun onItemLongClick(position: Int) {
+        Log.i("ShoppingList", "long click took place. Position: $position")
+    }
+
+    interface OnFragmentClosedListener{
+        fun onFragmentClosed()
+    }
+
+    fun setOnFragmentClosedListner(callback: OnFragmentClosedListener) {
+        this.callback = callback
     }
 }

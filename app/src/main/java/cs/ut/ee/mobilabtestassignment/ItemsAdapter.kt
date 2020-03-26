@@ -9,10 +9,10 @@ import androidx.appcompat.view.menu.MenuView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 
-class ItemsAdapter(private val dataset: ArrayList<ItemEntity>, val onItemClickListener: OnItemClickListener): RecyclerView.Adapter<ItemViewHolder>(){
+class ItemsAdapter(private val dataset: ArrayList<ItemEntity>, val onItemClickListener: OnItemClickListener, var onItemLongClickListener: OnItemLongClickListener): RecyclerView.Adapter<ItemViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return ItemViewHolder(inflater, parent, onItemClickListener)
+        return ItemViewHolder(inflater, parent, onItemClickListener, onItemLongClickListener)
     }
 
     override fun getItemCount(): Int {
@@ -27,7 +27,7 @@ class ItemsAdapter(private val dataset: ArrayList<ItemEntity>, val onItemClickLi
 
 
 
-class ItemViewHolder(inflater: LayoutInflater, parent: ViewGroup, var onItemClickListener: OnItemClickListener) : RecyclerView.ViewHolder(inflater.inflate(R.layout.item_row, parent, false)), View.OnClickListener{
+class ItemViewHolder(inflater: LayoutInflater, parent: ViewGroup, var onItemClickListener: OnItemClickListener, var onItemLongClickListener: OnItemLongClickListener) : RecyclerView.ViewHolder(inflater.inflate(R.layout.item_row, parent, false)), View.OnClickListener, View.OnLongClickListener{
     private var itemNameView: TextView? = null
     private var itemCompletedView: ImageView? = null
     private var itemConstraintLayout: ConstraintLayout? = null
@@ -38,10 +38,7 @@ class ItemViewHolder(inflater: LayoutInflater, parent: ViewGroup, var onItemClic
         itemCompletedView = itemView.findViewById(R.id.image_view_item)
         itemConstraintLayout = itemView.findViewById(R.id.constraint_layout_item)
         itemView.setOnClickListener(this)
-    }
-
-    override fun onClick(v: View?) {
-        onItemClickListener.onItemClick(adapterPosition)
+        itemView.setOnLongClickListener(this)
     }
 
     fun bind(item: ItemEntity){
@@ -52,8 +49,21 @@ class ItemViewHolder(inflater: LayoutInflater, parent: ViewGroup, var onItemClic
             itemCompletedView?.visibility = View.VISIBLE
         }
     }
+
+    override fun onClick(v: View?) {
+        onItemClickListener.onItemClick(adapterPosition)
+    }
+
+    override fun onLongClick(v: View?): Boolean {
+        onItemLongClickListener.onItemLongClick(adapterPosition)
+        return true
+    }
 }
 
 interface OnItemClickListener{
     fun onItemClick(position: Int)
+}
+
+interface OnItemLongClickListener{
+    fun onItemLongClick(position: Int)
 }
