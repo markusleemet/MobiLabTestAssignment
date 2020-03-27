@@ -16,10 +16,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.fragment_list.view.*
 
-private const val LIST_INDEX = ""
+private const val LIST_INDEX = "shoppingListIndex"
 
-class ListFragment :OnItemClickListener, OnItemLongClickListener, Fragment() {
-    private var listIndex: Int = -1
+class ListFragment :OnItemClickListener, OnItemLongClickListener, FragmentEdit.OnDeletePressedListener, Fragment() {
+    private var shoppingListIndex: Int = -1
     private var model: ShoppingListViewModel? = null
     private var recyclerViewAdapter: ItemsAdapter? = null
     private var callback: OnFragmentClosedListener? = null
@@ -27,7 +27,7 @@ class ListFragment :OnItemClickListener, OnItemLongClickListener, Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            listIndex = it.getInt(LIST_INDEX)
+            shoppingListIndex = it.getInt(LIST_INDEX)
         }
         model = ViewModelProvider(activity!!).get(ShoppingListViewModel::class.java)
     }
@@ -48,17 +48,17 @@ class ListFragment :OnItemClickListener, OnItemLongClickListener, Fragment() {
                     val itemName = outlinedTextFieldInsertItem.editText?.text.toString()
                     outlinedTextFieldInsertItem.editText?.setText("")
                     val item = ItemEntity(itemName, false)
-                    model?.addItemToShoppingList(item, listIndex)
+                    model?.addItemToShoppingList(item, shoppingListIndex)
                     recyclerViewAdapter?.notifyDataSetChanged()
                     Log.i("ShoppingList", "return action took place(item: $item)")
-                    Log.i("ShoppingList", "list new content: ${model!!.shoppingLists[listIndex]}")
+                    Log.i("ShoppingList", "list new content: ${model!!.shoppingLists[shoppingListIndex]}")
                 }
                 return false
             }
         })
 
         //set up recyclerView to show items in sopping list
-        recyclerViewAdapter = ItemsAdapter(model!!.shoppingLists[listIndex], this, this)
+        recyclerViewAdapter = ItemsAdapter(model!!.shoppingLists[shoppingListIndex], this, this)
         view.recyler_view_items_list.apply {
             layoutManager = LinearLayoutManager(activity)
             adapter = recyclerViewAdapter
@@ -85,20 +85,29 @@ class ListFragment :OnItemClickListener, OnItemLongClickListener, Fragment() {
 
     override fun onItemClick(position: Int) {
         Log.i("ShoppingList", "Clicked view position: $position")
-        Log.i("ShoppingList", "Clicked item: ${model!!.shoppingLists[listIndex][position]}")
-        model?.changeItemStatus(listIndex, position)
+        Log.i("ShoppingList", "Clicked item: ${model!!.shoppingLists[shoppingListIndex][position]}")
+        model?.changeItemStatus(shoppingListIndex, position)
         recyclerViewAdapter?.notifyDataSetChanged()
     }
 
     override fun onItemLongClick(position: Int) {
-        Log.i("ShoppingList", "long click took place. Position: $position")
+        val editFragment = FragmentEdit.newInstance(position, shoppingListIndex, "Delete item?")
+        editFragment.setOnDeletePressedListener(this)
+        val transaction = activity!!.supportFragmentManager.beginTransaction().add(R.id.constraint_layout_items_list, editFragment)
+        transaction.addToBackStack("editFragment")
+        transaction.commit()
+    }
+
+    fun setOnFragmentClosedListner(callback: OnFragmentClosedListener) {
+        this.callback = callback
     }
 
     interface OnFragmentClosedListener{
         fun onFragmentClosed()
     }
 
-    fun setOnFragmentClosedListner(callback: OnFragmentClosedListener) {
-        this.callback = callback
+    override fun onDeletePressed(shoppingListIndex: Int, itemIndex: Int) {
+        model!!.shoppingLists[shoppingListIndex].removeAt(itemIndex)
+        recyclerViewAdapter?.notifyDataSetChanged()
     }
 }

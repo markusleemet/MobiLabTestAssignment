@@ -8,7 +8,7 @@ class ShoppingListViewModel: ViewModel(){
 
 
     fun addItemToShoppingList(item: ItemEntity, listIndex: Int){
-        shoppingLists[listIndex].add(0, item)
+        shoppingLists[listIndex].add(item)
     }
 
     fun addNewShoppingList(){

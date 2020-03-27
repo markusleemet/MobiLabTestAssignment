@@ -7,9 +7,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_list.view.*
 
-class MainActivity : AppCompatActivity(), ListFragment.OnFragmentClosedListener, ShoppingListViewHolder.OnShoppingListClickListener {
+class MainActivity : AppCompatActivity(), ListFragment.OnFragmentClosedListener, ShoppingListViewHolder.OnShoppingListClickListener, ShoppingListViewHolder.OnShoppingListLongClickListener, FragmentEdit.OnDeletePressedListener{
     lateinit var model: ShoppingListViewModel
     lateinit var shoppingListAdapter: ShoppingListsAdapter
 
@@ -21,7 +20,7 @@ class MainActivity : AppCompatActivity(), ListFragment.OnFragmentClosedListener,
         model = ViewModelProvider(this).get(ShoppingListViewModel::class.java)
 
         //setup recycler view
-        shoppingListAdapter = ShoppingListsAdapter(model.shoppingLists, this)
+        shoppingListAdapter = ShoppingListsAdapter(model.shoppingLists, this, this)
         recycler_view_shopping_list.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = shoppingListAdapter
@@ -40,8 +39,11 @@ class MainActivity : AppCompatActivity(), ListFragment.OnFragmentClosedListener,
 
     override fun onFragmentClosed() {
         shoppingListAdapter.notifyDataSetChanged()
+        checkIfShoppingListIsEmpty()
+    }
 
-        //show or hide empty list text
+    //show or hide empty list text
+    private fun checkIfShoppingListIsEmpty(){
         if (model.shoppingLists.isEmpty().not()) {
             text_view_no_lists_available.visibility = View.INVISIBLE
         }else{
@@ -59,7 +61,21 @@ class MainActivity : AppCompatActivity(), ListFragment.OnFragmentClosedListener,
         floating_action_button.hide()
     }
 
+    override fun onDeletePressed(shoppingListIndex: Int, itemIndex: Int) {
+        model.shoppingLists.removeAt(shoppingListIndex)
+        shoppingListAdapter.notifyDataSetChanged()
+        checkIfShoppingListIsEmpty()
+    }
+
     override fun onShoppingListClick(position: Int) {
         openListFragment(position)
+    }
+
+    override fun onShoppingListLongClick(position: Int) {
+        val editFragment = FragmentEdit.newInstance(-1, position, "Delete list?")
+        editFragment.setOnDeletePressedListener(this)
+        val transaction = supportFragmentManager.beginTransaction().add(R.id.constraint_layout_shopping_lists, editFragment)
+        transaction.addToBackStack("editFragment")
+        transaction.commit()
     }
 }

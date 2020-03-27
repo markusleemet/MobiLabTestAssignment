@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ShoppingListsAdapter(private val dataset: ArrayList<ArrayList<ItemEntity>>, val onShoppingListClickListener: ShoppingListViewHolder.OnShoppingListClickListener): RecyclerView.Adapter<ShoppingListViewHolder>(){
+class ShoppingListsAdapter(private val dataset: ArrayList<ArrayList<ItemEntity>>, val onShoppingListClickListener: ShoppingListViewHolder.OnShoppingListClickListener, val onShoppingListLongClickListener: ShoppingListViewHolder.OnShoppingListLongClickListener): RecyclerView.Adapter<ShoppingListViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingListViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return ShoppingListViewHolder(inflater, parent, onShoppingListClickListener)
+        return ShoppingListViewHolder(inflater, parent, onShoppingListClickListener, onShoppingListLongClickListener)
     }
 
     override fun getItemCount(): Int {
@@ -22,12 +22,13 @@ class ShoppingListsAdapter(private val dataset: ArrayList<ArrayList<ItemEntity>>
     }
 }
 
-class ShoppingListViewHolder(inflater: LayoutInflater, parent: ViewGroup, val onShoppingListClickListener: OnShoppingListClickListener) : RecyclerView.ViewHolder(inflater.inflate(R.layout.shopping_list_row, parent, false)), View.OnClickListener{
+class ShoppingListViewHolder(inflater: LayoutInflater, parent: ViewGroup, val onShoppingListClickListener: OnShoppingListClickListener, val onShoppingListLongClickListener: OnShoppingListLongClickListener) : RecyclerView.ViewHolder(inflater.inflate(R.layout.shopping_list_row, parent, false)), View.OnClickListener, View.OnLongClickListener{
     private var itemsList: TextView? = null
 
     init {
         itemsList = itemView.findViewById(R.id.text_view_shopping_list)
         itemView.setOnClickListener(this)
+        itemView.setOnLongClickListener(this)
     }
 
 
@@ -47,7 +48,16 @@ class ShoppingListViewHolder(inflater: LayoutInflater, parent: ViewGroup, val on
         fun onShoppingListClick(position: Int)
     }
 
+    interface OnShoppingListLongClickListener{
+        fun onShoppingListLongClick(position: Int)
+    }
+
     override fun onClick(v: View?) {
         onShoppingListClickListener.onShoppingListClick(adapterPosition)
+    }
+
+    override fun onLongClick(v: View?): Boolean {
+        onShoppingListLongClickListener.onShoppingListLongClick(adapterPosition)
+        return true
     }
 }
