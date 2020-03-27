@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "703764203992",
+    "firebase_url": "https://mobilabtestassignment.firebaseio.com",
+    "project_id": "mobilabtestassignment",
+    "storage_bucket": "mobilabtestassignment.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:703764203992:android:a7c6b15035e0417e4ccaad",
+        "android_client_info": {
+          "package_name": "cs.ut.ee.mobilabtestassignment"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "703764203992-09qdd357stuu38e43pt5qa4s76geuas9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzRAOKna_m624PwZgtU8lXJ87iAFG5q1U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "703764203992-09qdd357stuu38e43pt5qa4s76geuas9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
