@@ -1,12 +1,15 @@
 package cs.ut.ee.mobilabtestassignment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity(), ListFragment.OnFragmentClosedListener, ShoppingListViewHolder.OnShoppingListClickListener, ShoppingListViewHolder.OnShoppingListLongClickListener, FragmentEdit.OnDeletePressedListener{
     lateinit var model: ShoppingListViewModel
@@ -26,6 +29,14 @@ class MainActivity : AppCompatActivity(), ListFragment.OnFragmentClosedListener,
             adapter = shoppingListAdapter
             addItemDecoration(DividerItemDecoration(this@MainActivity, LinearLayoutManager.VERTICAL))
         }
+
+        //read in data from database
+        model.readFromDataBase()
+        shoppingListAdapter.notifyDataSetChanged()
+        model.dataReceived.observe(this, Observer {
+            shoppingListAdapter.notifyDataSetChanged()
+            checkIfShoppingListIsEmpty()
+        })
     }
 
     /**
@@ -77,5 +88,11 @@ class MainActivity : AppCompatActivity(), ListFragment.OnFragmentClosedListener,
         val transaction = supportFragmentManager.beginTransaction().add(R.id.constraint_layout_shopping_lists, editFragment)
         transaction.addToBackStack("editFragment")
         transaction.commit()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        model.saveToDataBase()
+        Log.i("ShoppingList", "onPause() was called")
     }
 }
