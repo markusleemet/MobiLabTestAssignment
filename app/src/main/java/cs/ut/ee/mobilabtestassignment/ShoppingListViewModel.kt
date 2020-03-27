@@ -33,10 +33,8 @@ class ShoppingListViewModel: ViewModel(){
     }
 
     fun saveToDataBase(){
-        shoppingLists.forEach {
-            val index = shoppingLists.indexOf(it)
-            database.child("$index").setValue(shoppingLists[index])
-        }
+        database.removeValue()
+        database.setValue(shoppingLists)
     }
 
     fun readFromDataBase(){

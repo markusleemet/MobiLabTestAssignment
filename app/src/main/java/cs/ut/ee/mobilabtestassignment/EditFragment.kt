@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_edit.view.*
 
 private const val ITEM_INDEX = "itemIndex"
@@ -17,6 +16,18 @@ class FragmentEdit : Fragment() {
     private var shoppingListIndex: Int = -1
     private var fragmentText: String? = null
     private var callback: OnDeletePressedListener? = null
+
+    companion object {
+        @JvmStatic
+        fun newInstance(itemIndex: Int, shoppingListIndex: Int, fragmentText: String) =
+            FragmentEdit().apply {
+                arguments = Bundle().apply {
+                    putInt(ITEM_INDEX, itemIndex)
+                    putInt(SHOPPING_LIST_INDEX, shoppingListIndex)
+                    putString(FRAGMENT_TEXT, fragmentText)
+                }
+            }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,18 +53,6 @@ class FragmentEdit : Fragment() {
             activity!!.supportFragmentManager.popBackStack()
         }
         return view
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(itemIndex: Int, shoppingListIndex: Int, fragmentText: String) =
-            FragmentEdit().apply {
-                arguments = Bundle().apply {
-                    putInt(ITEM_INDEX, itemIndex)
-                    putInt(SHOPPING_LIST_INDEX, shoppingListIndex)
-                    putString(FRAGMENT_TEXT, fragmentText)
-                }
-            }
     }
 
     fun buttonCancel(){
